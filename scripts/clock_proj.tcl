@@ -15,31 +15,10 @@
 #   run results please launch the synthesis/implementation runs as needed.
 #
 #*****************************************************************************************
-# NOTE: In order to use this script for source control purposes, please make sure that the
-#       following files are added to the source control system:-
-#
-# 1. This project restoration tcl script (clock_proj.tcl) that was generated.
-#
-# 2. The following source(s) files that were local or imported into the original project.
-#    (Please see the '$orig_proj_dir' and '$origin_dir' variable setting below at the start of the script)
-#
-#    <none>
-#
-# 3. The following remote source files that were added to the original project:-
-#
-#    "/home/vasuul/projects/zybo/clock/clock_fpga/bd/clock_design/clock_design.bd"
-#    "/home/vasuul/projects/zybo/clock/clock_fpga/bd/clock_design/hdl/clock_design_wrapper.vhd"
-#    "/home/vasuul/projects/zybo/clock/clock_fpga/clock_fpga.srcs/constrs_1/imports/scripts/ZYBO_Master.xdc"
-#
-#*****************************************************************************************
 
 # Set the reference directory for source file relative paths (by default the value is script directory path)
-set origin_dir "."
-
-# Use origin directory path location variable, if specified in the tcl shell
-if { [info exists ::origin_dir_loc] } {
-  set origin_dir $::origin_dir_loc
-}
+#set origin_dir "."
+set origin_dir [file dirname [info script]]
 
 variable script_file
 set script_file "clock_proj.tcl"
@@ -84,11 +63,8 @@ if { $::argc > 0 } {
   }
 }
 
-# Set the directory path for the original project from where this script was exported
-set orig_proj_dir "[file normalize "$origin_dir/../"]"
-
 # Create project
-create_project clock_fpga ./clock_fpga -part xc7z010clg400-1
+create_project clock_fpga $origin_dir/../clock_fpga_proj -part xc7z010clg400
 
 # Set the directory path for the new project
 set proj_dir [get_property directory [current_project]]
