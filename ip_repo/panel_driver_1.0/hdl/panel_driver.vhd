@@ -24,7 +24,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
+use IEEE.NUMERIC_STD.ALL;
 
 -- Uncomment the following library declaration if instantiating
 -- any Xilinx leaf cells in this code.
@@ -71,7 +71,7 @@ architecture Behavioral of panel_driver is
   signal color_low  : std_logic_vector(31 downto 0);
 begin
 
-process (clk)
+process(clk)
 begin
   if(resetN = '0') then
     clk_counter   <= 0;

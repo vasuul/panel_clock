@@ -25,6 +25,8 @@ entity panel_driver_v1_0 is
     panel_in_clk  : in std_logic;
     panel_out_clk : out std_logic;
     
+    panel_reset   : in std_logic;
+    
     panel_oe  : out std_logic;
     panel_stb : out std_logic;
     panel_r0  : out std_logic;
@@ -93,7 +95,7 @@ end panel_driver_v1_0;
 
 architecture arch_imp of panel_driver_v1_0 is
   signal clka  : std_logic;
-  --signal wea   : std_logic_vector(0 downto 0);
+  --signal wea	 : std_logic_vector(0 downto 0);
   signal driver_addr : std_logic_vector(11 downto 0);
   signal driver_data  : std_logic_vector(31 downto 0);
   signal douta : std_logic_vector(31 downto 0);
