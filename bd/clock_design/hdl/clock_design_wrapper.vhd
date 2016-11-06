@@ -1,7 +1,7 @@
 --Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2016.2 (lin64) Build 1577090 Thu Jun  2 16:32:35 MDT 2016
---Date        : Sat Aug 13 18:14:05 2016
+--Date        : Sun Nov  6 15:12:10 2016
 --Host        : devel-virt running 64-bit Ubuntu 16.04.1 LTS
 --Command     : generate_target clock_design_wrapper.bd
 --Design      : clock_design_wrapper
@@ -35,7 +35,21 @@ entity clock_design_wrapper is
     FIXED_IO_ps_porb : inout STD_LOGIC;
     FIXED_IO_ps_srstb : inout STD_LOGIC;
     clk : in STD_LOGIC;
-    hb_led : out STD_LOGIC
+    hb_led : out STD_LOGIC;
+    panel_a : out STD_LOGIC;
+    panel_b : out STD_LOGIC;
+    panel_b0 : out STD_LOGIC;
+    panel_b1 : out STD_LOGIC;
+    panel_c : out STD_LOGIC;
+    panel_d : out STD_LOGIC;
+    panel_g0 : out STD_LOGIC;
+    panel_g1 : out STD_LOGIC;
+    panel_oe : out STD_LOGIC;
+    panel_out_clk : out STD_LOGIC;
+    panel_r0 : out STD_LOGIC;
+    panel_r1 : out STD_LOGIC;
+    panel_stb : out STD_LOGIC;
+    sw : in STD_LOGIC_VECTOR ( 2 downto 0 )
   );
 end clock_design_wrapper;
 
@@ -64,7 +78,21 @@ architecture STRUCTURE of clock_design_wrapper is
     FIXED_IO_ps_clk : inout STD_LOGIC;
     FIXED_IO_ps_porb : inout STD_LOGIC;
     hb_led : out STD_LOGIC;
-    clk : in STD_LOGIC
+    clk : in STD_LOGIC;
+    panel_out_clk : out STD_LOGIC;
+    panel_stb : out STD_LOGIC;
+    panel_r0 : out STD_LOGIC;
+    panel_oe : out STD_LOGIC;
+    panel_r1 : out STD_LOGIC;
+    panel_g0 : out STD_LOGIC;
+    panel_g1 : out STD_LOGIC;
+    panel_b0 : out STD_LOGIC;
+    panel_b1 : out STD_LOGIC;
+    panel_c : out STD_LOGIC;
+    panel_b : out STD_LOGIC;
+    panel_a : out STD_LOGIC;
+    panel_d : out STD_LOGIC;
+    sw : in STD_LOGIC_VECTOR ( 2 downto 0 )
   );
   end component clock_design;
 begin
@@ -92,6 +120,20 @@ clock_design_i: component clock_design
       FIXED_IO_ps_porb => FIXED_IO_ps_porb,
       FIXED_IO_ps_srstb => FIXED_IO_ps_srstb,
       clk => clk,
-      hb_led => hb_led
+      hb_led => hb_led,
+      panel_a => panel_a,
+      panel_b => panel_b,
+      panel_b0 => panel_b0,
+      panel_b1 => panel_b1,
+      panel_c => panel_c,
+      panel_d => panel_d,
+      panel_g0 => panel_g0,
+      panel_g1 => panel_g1,
+      panel_oe => panel_oe,
+      panel_out_clk => panel_out_clk,
+      panel_r0 => panel_r0,
+      panel_r1 => panel_r1,
+      panel_stb => panel_stb,
+      sw(2 downto 0) => sw(2 downto 0)
     );
 end STRUCTURE;

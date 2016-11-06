@@ -14,7 +14,7 @@ entity panel_driver_v1_0_PANEL_AXI is
 		-- Width of S_AXI data bus
 		C_S_AXI_DATA_WIDTH	: integer	:= 32;
 		-- Width of S_AXI address bus
-		C_S_AXI_ADDR_WIDTH	: integer	:= 12;
+		C_S_AXI_ADDR_WIDTH	: integer	:= 14;
 		-- Width of optional user defined signal in write address channel
 		C_S_AXI_AWUSER_WIDTH	: integer	:= 0;
 		-- Width of optional user defined signal in read address channel
@@ -217,7 +217,7 @@ architecture arch_imp of panel_driver_v1_0_PANEL_AXI is
 	constant ADDR_LSB  : integer := (C_S_AXI_DATA_WIDTH/32)+ 1;
 	constant OPT_MEM_ADDR_BITS : integer := 7;
 	constant USER_NUM_MEM: integer := 1;
-	constant low : std_logic_vector (C_S_AXI_ADDR_WIDTH - 1 downto 0) := "000000000000";
+	constant low : std_logic_vector (C_S_AXI_ADDR_WIDTH - 1 downto 0) := "00000000000000";
 begin
 	-- I/O Connections assignments
 
@@ -330,7 +330,6 @@ begin
 	        axi_wready <= '1';
 	        -- elsif (axi_awv_awr_flag = '0') then
 	      elsif (S_AXI_WLAST = '1' and axi_wready = '1') then 
-
 	        axi_wready <= '0';
 	      end if;
 	    end if;
@@ -474,8 +473,8 @@ begin
 	-- -- Example code to access user logic memory region
 	-- ------------------------------------------
 
-    panel_buffer_addr <= axi_araddr when axi_arv_arr_flag = '1' else
-                         axi_awaddr when axi_awv_awr_flag = '1' else
+    panel_buffer_addr <= axi_araddr(C_S_AXI_ADDR_WIDTH-1 downto 2) when axi_arv_arr_flag = '1' else
+                         axi_awaddr(C_S_AXI_ADDR_WIDTH-1 downto 2) when axi_awv_awr_flag = '1' else
                          (others => '0');
     panel_buffer_wen(0) <= axi_wready and S_AXI_WVALID ;
     panel_buffer_data_out  <= S_AXI_WDATA;

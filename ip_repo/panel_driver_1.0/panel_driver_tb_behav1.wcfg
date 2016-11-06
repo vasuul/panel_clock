@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="panel_driver_tb_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="panel_driver_tb" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="1002504642960fs"></ZoomStartTime>
+      <ZoomEndTime time="1003129191408fs"></ZoomEndTime>
+      <Cursor1Time time="1003025100000fs"></Cursor1Time>
+   </zoom_setting>
+   <WVObjectSize size="40" />
+   <wvobject type="logic" fp_name="/panel_driver_tb/clk_100MHz">
+      <obj_property name="ElementShortName">clk_100MHz</obj_property>
+      <obj_property name="ObjectShortName">clk_100MHz</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/clk_200MHz">
+      <obj_property name="ElementShortName">clk_200MHz</obj_property>
+      <obj_property name="ObjectShortName">clk_200MHz</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/clk">
+      <obj_property name="ElementShortName">clk</obj_property>
+      <obj_property name="ObjectShortName">clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/resetN">
+      <obj_property name="ElementShortName">resetN</obj_property>
+      <obj_property name="ObjectShortName">resetN</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/buf_data">
+      <obj_property name="ElementShortName">buf_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">buf_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/buf_addr">
+      <obj_property name="ElementShortName">buf_addr[11:0]</obj_property>
+      <obj_property name="ObjectShortName">buf_addr[11:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/LED_CLK">
+      <obj_property name="ElementShortName">LED_CLK</obj_property>
+      <obj_property name="ObjectShortName">LED_CLK</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/LED_OE">
+      <obj_property name="ElementShortName">LED_OE</obj_property>
+      <obj_property name="ObjectShortName">LED_OE</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/LED_LATCH">
+      <obj_property name="ElementShortName">LED_LATCH</obj_property>
+      <obj_property name="ObjectShortName">LED_LATCH</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/LED_ADDR">
+      <obj_property name="ElementShortName">LED_ADDR[3:0]</obj_property>
+      <obj_property name="ObjectShortName">LED_ADDR[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/LED_R">
+      <obj_property name="ElementShortName">LED_R[1:0]</obj_property>
+      <obj_property name="ObjectShortName">LED_R[1:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/LED_G">
+      <obj_property name="ElementShortName">LED_G[1:0]</obj_property>
+      <obj_property name="ObjectShortName">LED_G[1:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/LED_B">
+      <obj_property name="ElementShortName">LED_B[1:0]</obj_property>
+      <obj_property name="ObjectShortName">LED_B[1:0]</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/pwm_counter">
+      <obj_property name="ElementShortName">pwm_counter</obj_property>
+      <obj_property name="ObjectShortName">pwm_counter</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/curr_line">
+      <obj_property name="ElementShortName">curr_line</obj_property>
+      <obj_property name="ObjectShortName">curr_line</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/load_led">
+      <obj_property name="ElementShortName">load_led</obj_property>
+      <obj_property name="ObjectShortName">load_led</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/curr_scan">
+      <obj_property name="ElementShortName">curr_scan</obj_property>
+      <obj_property name="ObjectShortName">curr_scan</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/curr_state">
+      <obj_property name="ElementShortName">curr_state</obj_property>
+      <obj_property name="ObjectShortName">curr_state</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/red0">
+      <obj_property name="ElementShortName">red0[7:0]</obj_property>
+      <obj_property name="ObjectShortName">red0[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/blue0">
+      <obj_property name="ElementShortName">blue0[7:0]</obj_property>
+      <obj_property name="ObjectShortName">blue0[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/green0">
+      <obj_property name="ElementShortName">green0[7:0]</obj_property>
+      <obj_property name="ObjectShortName">green0[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/red1">
+      <obj_property name="ElementShortName">red1[7:0]</obj_property>
+      <obj_property name="ObjectShortName">red1[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/blue1">
+      <obj_property name="ElementShortName">blue1[7:0]</obj_property>
+      <obj_property name="ObjectShortName">blue1[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/green1">
+      <obj_property name="ElementShortName">green1[7:0]</obj_property>
+      <obj_property name="ObjectShortName">green1[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/color_high">
+      <obj_property name="ElementShortName">color_high[31:0]</obj_property>
+      <obj_property name="ObjectShortName">color_high[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/color_low">
+      <obj_property name="ElementShortName">color_low[31:0]</obj_property>
+      <obj_property name="ObjectShortName">color_low[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/panel_out_clk">
+      <obj_property name="ElementShortName">panel_out_clk</obj_property>
+      <obj_property name="ObjectShortName">panel_out_clk</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/panel_reset">
+      <obj_property name="ElementShortName">panel_reset</obj_property>
+      <obj_property name="ObjectShortName">panel_reset</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/panel_oe">
+      <obj_property name="ElementShortName">panel_oe</obj_property>
+      <obj_property name="ObjectShortName">panel_oe</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/panel_stb">
+      <obj_property name="ElementShortName">panel_stb</obj_property>
+      <obj_property name="ObjectShortName">panel_stb</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/panel_r0">
+      <obj_property name="ElementShortName">panel_r0</obj_property>
+      <obj_property name="ObjectShortName">panel_r0</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/panel_g0">
+      <obj_property name="ElementShortName">panel_g0</obj_property>
+      <obj_property name="ObjectShortName">panel_g0</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/panel_b0">
+      <obj_property name="ElementShortName">panel_b0</obj_property>
+      <obj_property name="ObjectShortName">panel_b0</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/panel_r1">
+      <obj_property name="ElementShortName">panel_r1</obj_property>
+      <obj_property name="ObjectShortName">panel_r1</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/panel_g1">
+      <obj_property name="ElementShortName">panel_g1</obj_property>
+      <obj_property name="ObjectShortName">panel_g1</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/panel_b1">
+      <obj_property name="ElementShortName">panel_b1</obj_property>
+      <obj_property name="ObjectShortName">panel_b1</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/panel_a">
+      <obj_property name="ElementShortName">panel_a</obj_property>
+      <obj_property name="ObjectShortName">panel_a</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/panel_b">
+      <obj_property name="ElementShortName">panel_b</obj_property>
+      <obj_property name="ObjectShortName">panel_b</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/panel_c">
+      <obj_property name="ElementShortName">panel_c</obj_property>
+      <obj_property name="ObjectShortName">panel_c</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/panel_driver_tb/panel_d">
+      <obj_property name="ElementShortName">panel_d</obj_property>
+      <obj_property name="ObjectShortName">panel_d</obj_property>
+   </wvobject>
+</wave_config>

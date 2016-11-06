@@ -34,6 +34,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity panel_driver is
   Port (clk   : in STD_LOGIC;
         resetN: in std_logic;
+        panel_test : in std_logic_vector(2 downto 0);
         
         buf_data  : in  STD_LOGIC_VECTOR (31 downto 0);
         buf_addr  : out STD_LOGIC_VECTOR (11 downto 0);
@@ -41,22 +42,26 @@ entity panel_driver is
         LED_CLK   : out STD_LOGIC;
         LED_OE    : out STD_LOGIC;
         LED_LATCH : out std_logic;
+        LED_ADDR  : out std_logic_vector(3 downto 0);
         LED_R     : out STD_LOGIC_VECTOR (1 downto 0);
         LED_G     : out STD_LOGIC_VECTOR (1 downto 0);
         LED_B     : out STD_LOGIC_VECTOR (1 downto 0));
 end panel_driver;
 
 architecture Behavioral of panel_driver is
-  signal clk_counter   : integer;
-  signal state_counter : integer;
-  signal pwm_counter   : integer;
+  signal line_counter : integer range 0 to 16;   -- Which line are we drawing
+  signal pwm_counter   : integer range 0 to 512; -- Counter for LED intensity
 
   -------- signals for panel driver --------
   -- Address for the output latch
-  signal curr_addr : integer range 0 to 7;  -- 8 scanlines
-  signal curr_bit  : integer range 0 to 31; -- 32 bits
+  signal curr_line : integer range 0 to 15;   -- 16 scanlines
+  signal curr_scan : integer range 0 to 31;   -- 32 bits in a line
+  signal load_led  : integer range 0 to 1024; -- 1024 LEDs in the panel
 
-  type PANEL_STATE is (INIT, SHIFTING_LOW, SHIFTING_HIGH, LINE_DONE, PANEL_DONE);
+  type PANEL_STATE is (INIT, INIT2, INIT3, 
+                       CLOCK_LOW, CLOCK_LOW_DATA, CLOCK_LOW_3, 
+                       CLOCK_HIGH_DATA, CLOCK_HIGH, CLOCK_HIGH_3,  
+                       LINE_DONE);
   signal curr_state : PANEL_STATE;
 
   signal red0   : std_logic_vector(7 downto 0);
@@ -69,132 +74,214 @@ architecture Behavioral of panel_driver is
   
   signal color_high : std_logic_vector(31 downto 0);
   signal color_low  : std_logic_vector(31 downto 0);
+  
 begin
 
 process(clk)
 begin
   if(resetN = '0') then
-    clk_counter   <= 0;
-    state_counter <= 0;
-    pwm_counter   <= 0;
-    
-    clk_out_int <= '0';
-    buf_addr_int <= (others => '0');
+    line_counter <= 0;
+    pwm_counter  <= 0;    
+  
+    LED_CLK   <= '0';
+    buf_addr  <= (others => '0');
 
-    curr_addr <= 0;
-    curr_bit <= 0;
+    curr_line <= 0;
+    curr_scan <= 0;
+    load_led  <= 0;
+
+    led_oe    <= '1';
+    led_latch <= '0';
     
-    curr_state <= SHIFTING_LOW;
+    red0   <= X"20";
+    green0 <= X"40";
+    blue0  <= X"60";
+    red1   <= X"80";
+    green1 <= X"A0";
+    blue1  <= X"C0";
+  
+    curr_state <= INIT;
+    
   elsif rising_edge(clk) then
-    
     case curr_state is
-      -- State we start in
+      -- State we start in - need to load the first colors from the buffer
       when INIT =>
-        LED_OE <= '1';
+        LED_OE     <= '0';
+        load_led   <= 0;
+        buf_addr   <= X"000"; -- Start of the panel        
+        curr_state <= INIT2;
         
-        -- We need to load the data for both scanlines from blockram
-        case state_counter is
-          -- Start off with the low address scanline at 0
-          when 0 =>
-            buf_addr <= (others => '0');            
-          when 1=> null;
-          when 2 =>
-            -- Next is the middle of the buffer at 0x200 (for 32*32 panel)
-            color_low <= buf_data;
-            buf_addr <= X"200";
-          when 3 => null;
-          when 4 =>
-            color_high <= buf_data;
-        end case;
-
-        if state_counter > 4 then
-          state_counter <= 0;
-          curr_state <= SHIFTING_LOW;
-        else
-          state_counter <= state_counter + 1;
-        end if;
-
-      -- Put out color data onto the wire and toggle the clock
-      when SHIFTING_LOW =>
-        -- Setup the output signals for the individual pixels
+      when INIT2 =>
+        red0       <= buf_data(23 downto 16);
+        green0     <= buf_data(15 downto  8);
+        blue0      <= buf_data( 7 downto  0);
+        buf_addr   <= X"200"; -- This should be half-way through the panel        
+        curr_state <= INIT3;
+        
+      when INIT3 =>
+        red1       <= buf_data(23 downto 16);
+        green1     <= buf_data(15 downto  8);
+        blue1      <= buf_data( 7 downto  0);
+        curr_state <= CLOCK_LOW;
+        
+      -- Start clocking the data
+      when CLOCK_LOW =>
         LED_CLK <= '0';
-        case state_counter is
-          when 0 =>
-            -- First time here we have to load up the pwm values
-            red0   <= color_low(31 downto 24);
-            green0 <= color_low(23 downto 16);
-            blue0  <= color_low(15 downto 8);
-            
-            red1   <= color_high(31 downto 24);
-            green1 <= color_high(23 downto 16);
-            blue1  <= color_high(15 downto 8);
-          when 1 =>
-            -- Then we set the output values based on out pwm values
-            --  TODO: Currently just setting them if the value is not 0
-            LED_R(0) <= '0' when red0 = X"00" else
-                        '1';
-            LED_G(0) <= '0' when green0 = X"00" else
-                        '1';
-            LED_B(0) <= '0' when blue0 = X"00" else
-                        '1';
-            LED_R(1) <= '0' when red1 = X"00" else
-                        '1';
-            LED_G(1) <= '0' when green1 = X"00" else
-                        '1';
-            LED_B(1) <= '0' when blue1 = X"00" else
-                        '1';
-        end case;
 
-        -- Need to hold these values for a while before going to the
-        --  next state
-        -- TODO: Make this lower, 4 maybe?
-        if state_counter > 5 then
-          state_counter <= 0;
-          curr_state <= SHIFTING_HIGH;
-        else
-          state_counter <= state_counter + 1;
+        if panel_test /= "000" then
+
+          if panel_test(0) = '1' then
+            red0 <= std_logic_vector(to_unsigned(curr_scan, 5)) & "000";
+            red1 <= std_logic_vector(to_unsigned(curr_scan, 5)) & "000";
+          else
+            red0 <= "00000000";
+            red1 <= "00000000";
+          end if;
+        
+          if panel_test(1) = '1' then
+            green0 <= "0" & std_logic_vector(to_unsigned(curr_line, 4) & "000");
+            green1 <= "1" & std_logic_vector(to_unsigned(curr_line, 4) & "000");
+          else
+              green0 <= "00000000";
+              green1 <= "00000000";
+          end if;
+        
+          if panel_test(2) = '1' then
+            blue0 <= std_logic_vector(to_unsigned(curr_scan + curr_line, 6)) & "00";
+            blue1 <= std_logic_vector(to_unsigned(curr_scan + curr_line + 8, 6)) & "00";
+          else
+            blue0 <= "00000000";
+            blue1 <= "00000000";
+          end if;
+        end if;  
+        -- Update which led we need to look up next
+        load_led   <= curr_line * 16 + curr_scan + 1;
+        curr_state <= CLOCK_LOW_DATA;
+
+      when CLOCK_LOW_DATA =>
+        LED_CLK <= '0';
+
+        if(pwm_counter < to_integer(unsigned(red0))) then
+          LED_R(0) <= '1';
+        else 
+          LED_R(0) <= '0';
         end if;
+            
+        if(pwm_counter < to_integer(unsigned(green0))) then
+          LED_G(0) <= '1';
+        else 
+          LED_G(0) <= '0';
+        end if;
+
+        if(pwm_counter < to_integer(unsigned(blue0))) then
+          LED_B(0) <= '1';
+        else 
+          LED_B(0) <= '0';
+        end if;
+
+        if(pwm_counter < to_integer(unsigned(red1))) then
+          LED_R(1) <= '1';
+        else 
+          LED_R(1) <= '0';
+        end if;
+
+        if(pwm_counter < to_integer(unsigned(green1))) then
+          LED_G(1) <= '1';
+        else 
+          LED_G(1) <= '0';
+        end if;
+
+        if(pwm_counter < to_integer(unsigned(blue1))) then
+          LED_B(1) <= '1';
+        else 
+          LED_B(1) <= '0';
+        end if;
+        
+        -- Start fetching the next set of colors here
+        buf_addr   <= std_logic_vector(to_unsigned(load_led, 12));
+        curr_state <= CLOCK_LOW_3;
       
-      when SHIFTING_HIGH =>
-        -- Get the color values for the next pixels
+      when CLOCK_LOW_3 =>
+        -- Latch the color and set the address for the lower half of the panel
+        red0       <= buf_data(7 downto 0);
+        green0     <= buf_data(15 downto 8);
+        blue0      <= buf_data(23 downto 16);
+        buf_addr   <= std_logic_vector(to_unsigned(load_led + 512, 12));
+        curr_state <= CLOCK_HIGH_DATA;
+
+      -- ----------------------------------------------------------------------
+      -- Put out color data onto the wire and toggle the clock
+      when CLOCK_HIGH_DATA =>
+        LED_CLK    <= '1';
+        
+        -- Latch the other half of the color data.  Now we are ready for the next
+        --  time through the clock loop
+        red1       <= buf_data(7 downto 0);
+        green1     <= buf_data(15 downto 8);
+        blue1      <= buf_data(23 downto 16);
+        curr_state <= CLOCK_HIGH;
+        
+      when CLOCK_HIGH =>
         LED_CLK <= '1';
         
-        red0   <= red0(0)   & red0(31 downto 1);
-        green0 <= green0(0) & green0(31 downto 1);
-        blue0  <= blue0(0)  & blue0(31 downto 1);
+        LED_R <= (others => '0');
+        LED_G <= (others => '0');
+        LED_B <= (others => '0');
         
-        red1   <= red1(0)   & red1(31 downto 1);
-        green1 <= green1(0) & green1(31 downto 1);
-        blue1  <= blue1(0)  & blue1(31 downto 1);
+        curr_state <= CLOCK_HIGH_3;
         
-        if(curr_bit = 31) then
+      when CLOCK_HIGH_3 =>
+        -- check to see if we have made it to the end of the scan line
+        if (curr_scan = 31) then
+          curr_scan   <= 0;
+          line_counter <= 0;
           curr_state <= LINE_DONE;
-          LED_LATCH <= '1';
         else
-          curr_state <= SHIFTING_LOW;
+          curr_scan   <= curr_scan + 1;
+          curr_state <= CLOCK_LOW;
         end if;
-        
-        curr_bit <= curr_bit + 1;
-        
+
+      -- ----------------------------------------------------------------------
+      -- Move onto the next scanline  
       when LINE_DONE =>
-        LED_LATCH <= '0';
         LED_CLK <= '0';
-        
-        if(curr_addr = 7) then
-          curr_state <= PANEL_DONE;
+        case line_counter is
+          when 1 =>
+            LED_OE    <= '1';
+          when 2 =>
+            LED_LATCH <= '1';
+            
+          when 4 =>          
+            LED_LATCH <= '0';
+          when 5 =>
+            LED_OE    <= '0';
+            
+          when others => null;
+        end case;
+
+        if line_counter >= 6 then
+          if pwm_counter < 255 then
+            pwm_counter <= pwm_counter + 1;
+          else
+            -- move on to the next line
+            pwm_counter <= 0;
+            if curr_line = 15 then
+              curr_line <= 0;
+            else
+              curr_line <= curr_line + 1;
+            end if;
+          end if;
+          
+          -- Start clocking more data
+          curr_state <= CLOCK_LOW;
         else
-          curr_state <= INIT;
+          line_counter <= line_counter + 1;
         end if;
-        
-        curr_bit <= 0;
-        curr_addr <= curr_addr + 1;
-        
-      when PANEL_DONE =>
-        curr_addr <= 0;
-        curr_state <= INIT;
-        
+
     end case;
   end if;
 end process;
+
+LED_ADDR <= std_logic_vector(to_unsigned(curr_line, 4));
 
 end Behavioral;

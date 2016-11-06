@@ -13,7 +13,7 @@ entity panel_driver_v1_0 is
     -- Parameters of Axi Slave Bus Interface PANEL_AXI
     C_PANEL_AXI_ID_WIDTH	: integer	:= 1;
     C_PANEL_AXI_DATA_WIDTH	: integer	:= 32;
-    C_PANEL_AXI_ADDR_WIDTH	: integer	:= 12;
+    C_PANEL_AXI_ADDR_WIDTH	: integer	:= 14;
     C_PANEL_AXI_AWUSER_WIDTH	: integer	:= 0;
     C_PANEL_AXI_ARUSER_WIDTH	: integer	:= 0;
     C_PANEL_AXI_WUSER_WIDTH	: integer	:= 0;
@@ -22,10 +22,11 @@ entity panel_driver_v1_0 is
     );
   port (
     -- Users to add ports here
-    panel_in_clk  : in std_logic;
     panel_out_clk : out std_logic;
+    panel_in_clk  : in std_logic;
     
-    panel_reset   : in std_logic;
+    panel_test  : in std_logic_vector(2 downto 0);
+    panel_reset : in std_logic;
     
     panel_oe  : out std_logic;
     panel_stb : out std_logic;
@@ -104,6 +105,9 @@ architecture arch_imp of panel_driver_v1_0 is
   signal addrb : std_logic_vector(11 downto 0);
   signal dinb  : std_logic_vector(31 downto 0);
   signal doutb : std_logic_vector(31 downto 0);
+  signal panel_axi_aresetn_buf : std_logic;
+  signal panel_axi_aresetn_sig : std_logic;
+  signal panel_resetN : std_logic := '1';
   
   component panel_buf_mem is
     Port ( 
@@ -121,8 +125,9 @@ architecture arch_imp of panel_driver_v1_0 is
   end component panel_buf_mem;
 
   component panel_driver is
-    Port ( clk      : in STD_LOGIC;
-           resetN   : in std_logic;
+    Port ( clk        : in STD_LOGIC;
+           resetN     : in std_logic;
+           panel_test : in std_logic_vector(2 downto 0);
            
            buf_data : in STD_LOGIC_VECTOR (31 downto 0);
            buf_addr : out STD_LOGIC_VECTOR (11 downto 0);
@@ -130,6 +135,7 @@ architecture arch_imp of panel_driver_v1_0 is
            LED_CLK  : out STD_LOGIC;
            LED_OE   : out std_logic;
            LED_LATCH: out std_logic;
+           LED_ADDR : out std_logic_vector(3 downto 0);
            LED_R    : out STD_LOGIC_VECTOR (1 downto 0);
            LED_G    : out STD_LOGIC_VECTOR (1 downto 0);
            LED_B    : out STD_LOGIC_VECTOR (1 downto 0));
@@ -205,11 +211,11 @@ begin
 
   panel_buf_mem_inst : panel_buf_mem
     port map (
-      clka  => panel_in_clk,
+      clka  => panel_axi_aclk,
       wea   => (others => '0'),
       addra => driver_addr,
-      dina  => driver_data,
-      douta => douta,
+      dina  => (others => '0'),
+      douta => driver_data,
       
       clkb  => panel_axi_aclk,
       web   => web,
@@ -221,7 +227,8 @@ begin
   panel_driver_inst : panel_driver
     port map (
       clk   => panel_in_clk,
-      resetN => panel_axi_aresetn,
+      resetN => panel_resetN, -- and because neg
+      panel_test => panel_test,
              
       buf_data => driver_data,
       buf_addr => driver_addr,
@@ -229,6 +236,10 @@ begin
       LED_CLK   => panel_out_clk,
       LED_OE    => panel_oe,
       LED_LATCH => panel_stb,
+      LED_ADDR(0) => panel_a,
+      LED_ADDR(1) => panel_b,
+      LED_ADDR(2) => panel_c,
+      LED_ADDR(3) => panel_d,
       LED_R(0)  => panel_r0,
       LED_R(1)  => panel_r1,
       LED_G(0)  => panel_g0,
@@ -240,14 +251,14 @@ begin
 -- Instantiation of Axi Bus Interface PANEL_AXI
   panel_driver_v1_0_PANEL_AXI_inst : panel_driver_v1_0_PANEL_AXI
     generic map (
-      C_S_AXI_ID_WIDTH	=> C_PANEL_AXI_ID_WIDTH,
-      C_S_AXI_DATA_WIDTH	=> C_PANEL_AXI_DATA_WIDTH,
-      C_S_AXI_ADDR_WIDTH	=> C_PANEL_AXI_ADDR_WIDTH,
-      C_S_AXI_AWUSER_WIDTH	=> C_PANEL_AXI_AWUSER_WIDTH,
-      C_S_AXI_ARUSER_WIDTH	=> C_PANEL_AXI_ARUSER_WIDTH,
-      C_S_AXI_WUSER_WIDTH	=> C_PANEL_AXI_WUSER_WIDTH,
-      C_S_AXI_RUSER_WIDTH	=> C_PANEL_AXI_RUSER_WIDTH,
-      C_S_AXI_BUSER_WIDTH	=> C_PANEL_AXI_BUSER_WIDTH
+      C_S_AXI_ID_WIDTH	     => C_PANEL_AXI_ID_WIDTH,
+      C_S_AXI_DATA_WIDTH     => C_PANEL_AXI_DATA_WIDTH,
+      C_S_AXI_ADDR_WIDTH     => C_PANEL_AXI_ADDR_WIDTH,
+      C_S_AXI_AWUSER_WIDTH   => C_PANEL_AXI_AWUSER_WIDTH,
+      C_S_AXI_ARUSER_WIDTH   => C_PANEL_AXI_ARUSER_WIDTH,
+      C_S_AXI_WUSER_WIDTH    => C_PANEL_AXI_WUSER_WIDTH,
+      C_S_AXI_RUSER_WIDTH    => C_PANEL_AXI_RUSER_WIDTH,
+      C_S_AXI_BUSER_WIDTH    => C_PANEL_AXI_BUSER_WIDTH
       )
     port map (
       panel_buffer_wen      => web,
@@ -276,7 +287,7 @@ begin
       S_AXI_WUSER	=> panel_axi_wuser,
       S_AXI_WVALID	=> panel_axi_wvalid,
       S_AXI_WREADY	=> panel_axi_wready,
-      S_AXI_BID	=> panel_axi_bid,
+      S_AXI_BID	    => panel_axi_bid,
       S_AXI_BRESP	=> panel_axi_bresp,
       S_AXI_BUSER	=> panel_axi_buser,
       S_AXI_BVALID	=> panel_axi_bvalid,
@@ -290,11 +301,11 @@ begin
       S_AXI_ARCACHE	=> panel_axi_arcache,
       S_AXI_ARPROT	=> panel_axi_arprot,
       S_AXI_ARQOS	=> panel_axi_arqos,
-      S_AXI_ARREGION	=> panel_axi_arregion,
+      S_AXI_ARREGION=> panel_axi_arregion,
       S_AXI_ARUSER	=> panel_axi_aruser,
       S_AXI_ARVALID	=> panel_axi_arvalid,
       S_AXI_ARREADY	=> panel_axi_arready,
-      S_AXI_RID	=> panel_axi_rid,
+      S_AXI_RID	    => panel_axi_rid,
       S_AXI_RDATA	=> panel_axi_rdata,
       S_AXI_RRESP	=> panel_axi_rresp,
       S_AXI_RLAST	=> panel_axi_rlast,
@@ -302,5 +313,6 @@ begin
       S_AXI_RVALID	=> panel_axi_rvalid,
       S_AXI_RREADY	=> panel_axi_rready
       );
-
+      
+      panel_resetN <= panel_axi_aresetn and not panel_reset;
 end arch_imp;
