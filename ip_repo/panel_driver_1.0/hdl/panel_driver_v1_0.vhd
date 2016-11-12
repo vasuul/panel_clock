@@ -211,7 +211,7 @@ begin
 
   panel_buf_mem_inst : panel_buf_mem
     port map (
-      clka  => panel_axi_aclk,
+      clka  => panel_in_clk,
       wea   => (others => '0'),
       addra => driver_addr,
       dina  => (others => '0'),

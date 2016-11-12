@@ -11,11 +11,11 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="1002504642960fs"></ZoomStartTime>
-      <ZoomEndTime time="1003129191408fs"></ZoomEndTime>
-      <Cursor1Time time="1003025100000fs"></Cursor1Time>
+      <ZoomStartTime time="118188333334fs"></ZoomStartTime>
+      <ZoomEndTime time="161488333335fs"></ZoomEndTime>
+      <Cursor1Time time="125405000000fs"></Cursor1Time>
    </zoom_setting>
-   <WVObjectSize size="40" />
+   <WVObjectSize size="43" />
    <wvobject type="logic" fp_name="/panel_driver_tb/clk_100MHz">
       <obj_property name="ElementShortName">clk_100MHz</obj_property>
       <obj_property name="ObjectShortName">clk_100MHz</obj_property>
@@ -68,9 +68,17 @@
       <obj_property name="ElementShortName">LED_B[1:0]</obj_property>
       <obj_property name="ObjectShortName">LED_B[1:0]</obj_property>
    </wvobject>
-   <wvobject type="other" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/pwm_counter">
-      <obj_property name="ElementShortName">pwm_counter</obj_property>
-      <obj_property name="ObjectShortName">pwm_counter</obj_property>
+   <wvobject type="other" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/pwm_iter">
+      <obj_property name="ElementShortName">pwm_iter</obj_property>
+      <obj_property name="ObjectShortName">pwm_iter</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/pwm_block">
+      <obj_property name="ElementShortName">pwm_block</obj_property>
+      <obj_property name="ObjectShortName">pwm_block</obj_property>
+   </wvobject>
+   <wvobject type="other" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/pwm_value">
+      <obj_property name="ElementShortName">pwm_value</obj_property>
+      <obj_property name="ObjectShortName">pwm_value</obj_property>
    </wvobject>
    <wvobject type="other" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/curr_line">
       <obj_property name="ElementShortName">curr_line</obj_property>
@@ -119,6 +127,10 @@
    <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/color_low">
       <obj_property name="ElementShortName">color_low[31:0]</obj_property>
       <obj_property name="ObjectShortName">color_low[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/panel_driver_tb/inst_panel_driver_v1_0/panel_driver_inst/panel_test">
+      <obj_property name="ElementShortName">panel_test[2:0]</obj_property>
+      <obj_property name="ObjectShortName">panel_test[2:0]</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/panel_driver_tb/panel_out_clk">
       <obj_property name="ElementShortName">panel_out_clk</obj_property>

@@ -331,6 +331,7 @@ begin
 
   end procedure write_axi;
   begin
+    panel_test <= "000";
     panel_axi_aresetn <= '0';
     wait for 1 ns;
     panel_axi_aresetn <= '0';
@@ -345,7 +346,7 @@ begin
 --      write_axi(std_logic_vector("001" & to_unsigned(i, 8) & "00"),
 --                X"00" & std_logic_vector(to_unsigned(i, 8)) &
 --                X"00" & std_logic_vector(to_unsigned(i, 8)));
-      write_axi(std_logic_vector("000" & to_unsigned(i, 9) & "00"), X"FFFFFFFF");
+      write_axi(std_logic_vector("000" & to_unsigned(i, 9) & "00"), X"80808080");
       write_axi(std_logic_vector("001" & to_unsigned(i, 9) & "00"), X"00000000");
     end loop;
     wait;
