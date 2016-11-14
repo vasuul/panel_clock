@@ -264,21 +264,18 @@ begin
       when LINE_DONE =>
         LED_CLK <= '0';
         case line_counter is
-          when 1 =>
+          when 0 =>
             LED_OE    <= '1';
-          when 2 =>
             LED_LATCH <= '1';
-            
-          when 4 =>          
+          when 2 =>  
             LED_LATCH <= '0';
-          when 5 =>
             LED_OE    <= '0';
             
           when others => null;
         end case;
 
         -- Stay in this state for 7 cycles, then move on to the next state
-        if line_counter >= 6 then
+        if line_counter >= 2 then
           if pwm_iter = 255 then
             pwm_iter <= 0;
             

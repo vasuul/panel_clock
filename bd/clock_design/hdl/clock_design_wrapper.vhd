@@ -1,7 +1,7 @@
 --Copyright 1986-2016 Xilinx, Inc. All Rights Reserved.
 ----------------------------------------------------------------------------------
 --Tool Version: Vivado v.2016.2 (lin64) Build 1577090 Thu Jun  2 16:32:35 MDT 2016
---Date        : Sat Nov 12 16:59:52 2016
+--Date        : Sat Nov 12 17:35:44 2016
 --Host        : devel-virt running 64-bit Ubuntu 16.04.1 LTS
 --Command     : generate_target clock_design_wrapper.bd
 --Design      : clock_design_wrapper
